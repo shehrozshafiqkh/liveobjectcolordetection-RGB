@@ -1,1 +1,1 @@
-# liveobjectcolordetection-RGB
+# Live Object Color Detection (RGB)
