@@ -1,0 +1,39 @@
+obj=ipcam('http://192.168.10.7:8080/video'); 
+%install from Matlab add on explorer
+ss=snapshot(obj);
+
+frame = 0;
+while (frame <= 1000) 
+    
+      data = snapshot(obj); 
+      frame = frame + 1;    
+      
+      img = imsubtract(data(:,:,1), rgb2gray(data)); 
+      img = medfilt2(img, [3 3]);             
+      img = im2bw(img,0.18);                   
+      
+  
+      img = bwareaopen(img,300); 
+      %gather image pixel of connectted components
+      %300 sy kam waly pixels ko discard kr k 300 sy opper waly othaye ga
+    
+     bw = bwlabel(img, 8); 
+     %8 connected waly components ko otha k label kr dy ga
+    
+     region = regionprops(bw, 'BoundingBox', 'Centroid');
+    imshow(data)
+    hold on 
+    %frame hold ho jaye ga for axis get
+    
+    for object = 1:length(region)
+        boxB = region(object).BoundingBox;
+        boxCentre = region(object).Centroid;
+        rectangle('Position' ,boxB, 'EdgeColor' ,'r' , 'LineWidth' ,2)
+      
+    end  
+ 
+    hold off
+    
+end
+
+clear all
